@@ -177,7 +177,10 @@ func (s *Stream) Serve(ctx context.Context, w http.ResponseWriter, r *http.Reque
 	}
 
 	id := s.mf.ID
-	c, err := io.Copy(w, s)
+	// High-performance streaming buffer: 256KB chunks instead of default 32KB
+	// drastically reduces context switching and delivers audio bursts faster to the client
+	buf := make([]byte, 256*1024)
+	c, err := io.CopyBuffer(w, s, buf)
 	if err != nil {
 		log.Error(ctx, "Error sending transcoded file", "id", id, err)
 		if c == 0 {

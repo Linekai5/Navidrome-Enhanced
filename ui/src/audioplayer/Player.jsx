@@ -34,6 +34,7 @@ import { keyMap } from '../hotkeys'
 import keyHandlers from './keyHandlers'
 import { calculateGain } from '../utils/calculateReplayGain'
 import { detectBrowserProfile, decisionService } from '../transcode'
+import streamCache from './streamCache'
 
 const Player = () => {
   const theme = useCurrentTheme()
@@ -44,7 +45,14 @@ const Player = () => {
   const dispatch = useDispatch()
   const [currentTrackId, setCurrentTrackId] = useState(null)
   const [heartbeatTrackId, setHeartbeatTrackId] = useState(null)
+  const [, setCacheVersion] = useState(0)
   const lastPositionMsRef = useRef(0)
+
+  useEffect(() => {
+    return streamCache.subscribe(() => {
+      setCacheVersion((v) => v + 1)
+    })
+  }, [])
   const currentTrackIdRef = useRef(null)
   const stoppedRef = useRef(false)
   const [audioInstance, setAudioInstance] = useState(null)
@@ -110,11 +118,18 @@ const Player = () => {
     })
   }, [dispatch])
 
-  // Pre-fetch transcode decisions for next 2-3 songs when queue or position changes
+  // Pre-fetch transcode decisions and audio stream for the next track
   useEffect(() => {
     if (!playerState.queue.length) return
 
     const currentIdx = playerState.savedPlayIndex || 0
+    const currentTrack = playerState.queue[currentIdx]
+    const nextTrack = playerState.queue[currentIdx + 1]
+
+    // Keep memory clean: prune tracks not in active playback range
+    const keepIds = [currentTrack?.trackId, nextTrack?.trackId].filter(Boolean)
+    streamCache.prune(keepIds)
+
     const nextSongIds = playerState.queue
       .slice(currentIdx + 1, currentIdx + 4)
       .filter((item) => !item.isRadio)
@@ -122,6 +137,15 @@ const Player = () => {
 
     if (nextSongIds.length > 0) {
       decisionService.prefetchDecisions(nextSongIds)
+    }
+
+    // Smart prefetch next track's actual audio stream into fast memory blob
+    if (nextTrack && !nextTrack.isRadio && nextTrack.trackId) {
+      decisionService.resolveStreamUrl(nextTrack.trackId).then((streamUrl) => {
+        if (streamUrl) {
+          streamCache.prefetch(nextTrack.trackId, streamUrl)
+        }
+      })
     }
   }, [playerState.queue, playerState.savedPlayIndex])
 
@@ -243,7 +267,13 @@ const Player = () => {
     const current = playerState.current || {}
     return {
       ...defaultOptions,
-      audioLists: playerState.queue.map((item) => item),
+      audioLists: playerState.queue.map((item) => {
+        const cachedUrl = streamCache.getCachedUrl(item.trackId)
+        if (cachedUrl) {
+          return { ...item, musicSrc: cachedUrl }
+        }
+        return item
+      }),
       playIndex: playerState.playIndex,
       autoPlay:
         playerState.queue.length > 0 &&

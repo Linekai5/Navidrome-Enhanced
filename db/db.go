@@ -46,6 +46,19 @@ func Db() *sql.DB {
 					if err := conn.RegisterFunc("SEEDEDRAND", hasher.HashFunc(), false); err != nil {
 						return err
 					}
+					// Performance PRAGMAs:
+					// 1. mmap_size = 512MB for zero-copy memory-mapped database reads
+					// 2. cache_size = -64000 (64MB) in-memory page cache
+					// 3. synchronous = NORMAL for low-latency WAL commits
+					// 4. temp_store = MEMORY for in-RAM temporary sorting tables
+					if _, err := conn.Exec(`
+						PRAGMA mmap_size = 536870912;
+						PRAGMA cache_size = -64000;
+						PRAGMA synchronous = NORMAL;
+						PRAGMA temp_store = MEMORY;
+					`, nil); err != nil {
+						log.Warn("Could not apply SQLite performance PRAGMAs", "error", err)
+					}
 					return conn.RegisterCollation(NaturalCollation, natural.CompareFold)
 				},
 			})

@@ -1,52 +1,83 @@
+/**
+ * amusic.js
+ *
+ * Apple Music (AMusic) Theme for Navidrome.
+ * Implements Apple Music's authentic design language:
+ * - Signature Apple Music Red/Pink (#FA2D48) accents
+ * - Translucent frosted glassmorphism (backdrop-filter)
+ * - SF Pro system typography with refined letter spacing
+ * - Rounded pill buttons and cards
+ * - Sleek, borderless tracklists and high-contrast metadata
+ */
+
 import stylesheet from './amusic.css.js'
 
 export default {
   themeName: 'AMusic',
   typography: {
     fontFamily:
-      '-apple-system, BlinkMacSystemFont, Apple Color Emoji, SF Pro, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif',
+      "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'SF Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif",
     h6: {
-      fontSize: '1rem', // AppBar title
+      fontSize: '1.05rem',
+      fontWeight: 600,
+      letterSpacing: '-0.01em',
     },
     h5: {
-      fontSize: '2em',
-      fontWeight: '600',
+      fontSize: '1.75rem',
+      fontWeight: 700,
+      letterSpacing: '-0.02em',
+    },
+    body1: {
+      fontSize: '0.9rem',
+      letterSpacing: '-0.005em',
+    },
+    body2: {
+      fontSize: '0.825rem',
     },
   },
   palette: {
     primary: {
-      main: '#ff4e6b',
+      main: '#FA2D48',
+      light: '#FF4762',
+      dark: '#D61A34',
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#D60017',
-      contrastText: '#eee',
+      main: '#FA2D48',
+      contrastText: '#FFFFFF',
     },
     background: {
-      default: '#1a1a1a',
-      paper: '#1a1a1a',
+      default: '#121214',
+      paper: '#1C1C1E',
+    },
+    text: {
+      primary: '#FFFFFF',
+      secondary: '#A1A1A6',
+      disabled: '#636366',
     },
     type: 'dark',
   },
   overrides: {
-    MuiFormGroup: {
-      root: {
-        color: 'white',
+    MuiCssBaseline: {
+      '@global': {
+        body: {
+          backgroundColor: '#121214',
+          color: '#FFFFFF',
+          WebkitFontSmoothing: 'antialiased',
+          MozOsxFontSmoothing: 'grayscale',
+        },
       },
     },
     MuiAppBar: {
       positionFixed: {
-        backgroundColor: '#1d1d1d !important',
+        backgroundColor: 'rgba(18, 18, 20, 0.78) !important',
+        backdropFilter: 'blur(30px) saturate(190%)',
+        WebkitBackdropFilter: 'blur(30px) saturate(190%)',
         boxShadow: 'none',
-        borderBottom: '1px solid #fff1',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
       },
       colorSecondary: {
-        color: '#eee',
-      },
-    },
-    MuiDrawer: {
-      root: {
-        background: '#1d1d1d',
-        borderRight: '1px solid #fff1',
+        color: '#FFFFFF',
       },
     },
     MuiToolbar: {
@@ -54,112 +85,190 @@ export default {
         background: 'transparent !important',
       },
     },
-    MuiCardMedia: {
-      img: {
-        borderRadius: '10px',
-        boxShadow: '5px 5px 20px #111',
+    MuiDrawer: {
+      root: {
+        background: '#161618 !important',
+        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
+      },
+      paper: {
+        background: '#161618 !important',
+        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
       },
     },
-    MuiButton: {
+    MuiListItem: {
       root: {
-        background: '#D60017',
-        color: '#fff',
-        borderRadius: '6px',
-        paddingRight: '0.5rem',
-        paddingLeft: '0.5rem',
-        marginLeft: '0.5rem',
-        marginBottom: '0.5rem',
-        textTransform: 'capitalize',
-        fontWeight: 600,
-      },
-      textPrimary: {
-        color: '#eee',
-      },
-      textSecondary: {
-        color: '#eee',
-        backgroundColor: '#ff4e6b',
-      },
-      textSizeSmall: {
-        fontSize: '0.8rem',
-        paddingRight: '0.5rem',
-        paddingLeft: '0.5rem',
-      },
-      label: {
-        paddingRight: '1rem',
-        paddingLeft: '0.7rem',
+        borderRadius: '8px',
+        margin: '2px 10px',
+        padding: '8px 12px',
+        color: '#A1A1A6',
+        transition: 'all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
+        '&:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.06)',
+          color: '#FFFFFF',
+        },
+        '&.Mui-selected': {
+          backgroundColor: 'rgba(250, 45, 72, 0.15) !important',
+          color: '#FA2D48 !important',
+          fontWeight: 600,
+          '& .MuiListItemIcon-root': {
+            color: '#FA2D48 !important',
+          },
+        },
       },
     },
     MuiListItemIcon: {
       root: {
-        color: '#ff4e6b',
+        color: '#A1A1A6',
+        minWidth: '36px',
+        transition: 'color 0.18s ease',
       },
     },
-    MuiChip: {
+    MuiButton: {
       root: {
-        borderRadius: '6px',
+        background: '#FA2D48',
+        color: '#FFFFFF',
+        borderRadius: '9999px',
+        padding: '6px 18px',
+        textTransform: 'none',
+        fontWeight: 600,
+        fontSize: '0.875rem',
+        boxShadow: '0 4px 14px rgba(250, 45, 72, 0.35)',
+        transition: 'all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)',
+        '&:hover': {
+          background: '#FF4762 !important',
+          transform: 'scale(1.03)',
+          boxShadow: '0 6px 20px rgba(250, 45, 72, 0.45)',
+        },
+        '&:active': {
+          transform: 'scale(0.96)',
+        },
+      },
+      textPrimary: {
+        color: '#FFFFFF',
+        background: 'transparent',
+        boxShadow: 'none',
+        '&:hover': {
+          background: 'rgba(255, 255, 255, 0.08) !important',
+          boxShadow: 'none',
+        },
+      },
+      textSecondary: {
+        color: '#FFFFFF',
+        backgroundColor: '#FA2D48',
+      },
+      textSizeSmall: {
+        fontSize: '0.8rem',
+        padding: '4px 12px',
+      },
+      label: {
+        padding: '0 4px',
       },
     },
     MuiIconButton: {
       root: {
-        color: '#ff4e6b',
+        color: 'rgba(255, 255, 255, 0.85)',
+        transition: 'all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
+        '&:hover': {
+          color: '#FA2D48',
+          backgroundColor: 'rgba(255, 255, 255, 0.06)',
+          transform: 'scale(1.08)',
+        },
+        '&:active': {
+          transform: 'scale(0.92)',
+        },
+      },
+    },
+    MuiCardMedia: {
+      img: {
+        borderRadius: '12px',
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
+        transition: 'all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)',
+      },
+    },
+    NDAlbumGridView: {
+      albumName: {
+        color: '#FFFFFF',
+        fontWeight: 600,
+        fontSize: '0.95rem',
+        letterSpacing: '-0.01em',
+        marginTop: '6px',
+      },
+      albumArtistName: {
+        color: '#A1A1A6',
+        fontSize: '0.825rem',
+      },
+      albumPlayButton: {
+        color: '#FA2D48 !important',
+        backgroundColor: 'rgba(255, 255, 255, 0.95) !important',
+        borderRadius: '50%',
+        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.5)',
+        transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        '&:hover': {
+          transform: 'scale(1.15) !important',
+          backgroundColor: '#FFFFFF !important',
+        },
+      },
+      cover: {
+        borderRadius: '10px !important',
+        boxShadow: '0 6px 20px rgba(0, 0, 0, 0.35)',
+        transition: 'all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 14px 32px rgba(0, 0, 0, 0.55)',
+        },
       },
     },
     MuiTableBody: {
       root: {
-        '&>tr:nth-child(odd)': {
-          background: 'rgba(255, 255, 255, 0.025)',
+        '& > tr:nth-child(odd)': {
+          background: 'transparent',
         },
       },
     },
     MuiTableRow: {
       root: {
         background: 'transparent',
+        borderRadius: '8px',
+        transition: 'background-color 0.15s ease',
+        '&:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.05) !important',
+        },
       },
     },
     MuiTableCell: {
       root: {
-        borderBottom: '0 none !important',
-        padding: '10px !important',
-        color: '#b3b3b3 !important',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.04) !important',
+        padding: '10px 16px !important',
+        color: '#A1A1A6 !important',
+        fontSize: '0.875rem',
+        '& img[alt="playing"], & img[alt="paused"]': {
+          filter:
+            'brightness(0) saturate(100%) invert(35%) sepia(91%) saturate(3475%) hue-rotate(334deg) brightness(99%) contrast(98%)',
+        },
+        '& img[alt="playing"] + span, & img[alt="paused"] + span': {
+          color: '#FA2D48 !important',
+          fontWeight: 600,
+        },
       },
       head: {
-        color: '#b3b3b3 !important',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08) !important',
+        color: '#6E6E73 !important',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        letterSpacing: '0.06em',
       },
     },
     MuiMenuItem: {
       root: {
         fontSize: '0.875rem',
-        borderRadius: '10px',
-        color: '#eee',
-      },
-    },
-    NDAlbumGridView: {
-      albumName: {
-        color: '#eee',
-      },
-      albumPlayButton: {
-        color: '#ff4e6b',
-      },
-      albumArtistName: {
-        color: '#ccc',
-      },
-      cover: {
-        borderRadius: '6px',
-      },
-    },
-    NDLogin: {
-      systemNameLink: {
-        color: '#ff4e6b',
-      },
-      welcome: {
-        color: '#eee',
-      },
-      card: {
-        minWidth: 300,
-        backgroundColor: '#1d1d1d',
-      },
-      icon: {
-        filter: 'hue-rotate(115deg)',
+        borderRadius: '8px',
+        margin: '2px 6px',
+        color: '#FFFFFF',
+        transition: 'background-color 0.15s ease',
+        '&:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.08) !important',
+        },
       },
     },
     MuiPaper: {
@@ -167,71 +276,126 @@ export default {
         boxShadow: 'none',
       },
       root: {
-        color: '#eee',
+        backgroundColor: '#1C1C1E',
+        color: '#FFFFFF',
       },
       rounded: {
-        borderRadius: '6px',
+        borderRadius: '12px',
+      },
+    },
+    MuiChip: {
+      root: {
+        borderRadius: '9999px',
+        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+        color: '#FFFFFF',
+      },
+    },
+    RaSearchInput: {
+      input: {
+        '& .MuiInputBase-root': {
+          backgroundColor: 'rgba(255, 255, 255, 0.08) !important',
+          borderRadius: '9999px !important',
+          color: '#FFFFFF',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          transition: 'all 0.2s ease',
+          '& fieldset': {
+            borderColor: 'transparent',
+          },
+          '&:hover fieldset': {
+            borderColor: 'transparent',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: 'transparent',
+          },
+          '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.12) !important',
+          },
+          '&.Mui-focused': {
+            backgroundColor: 'rgba(255, 255, 255, 0.16) !important',
+            boxShadow: '0 0 0 2px #FA2D48',
+          },
+          '& svg': {
+            color: '#A1A1A6 !important',
+          },
+        },
+      },
+    },
+    NDAlbumDetails: {
+      root: {
+        boxShadow: 'none',
+        background: 'transparent',
+      },
+      cover: {
+        borderRadius: '14px',
+        boxShadow: '0 12px 32px rgba(0, 0, 0, 0.65)',
+      },
+      recordName: {
+        fontWeight: 700,
+        fontSize: '2rem',
+        letterSpacing: '-0.02em',
+      },
+      artistName: {
+        color: '#FA2D48',
+        fontWeight: 600,
+      },
+    },
+    NDLogin: {
+      systemNameLink: {
+        color: '#FA2D48',
+      },
+      welcome: {
+        color: '#FFFFFF',
+      },
+      card: {
+        minWidth: 320,
+        backgroundColor: '#1C1C1E',
+        borderRadius: '16px',
+        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.7)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+      },
+      icon: {
+        filter:
+          'brightness(0) saturate(100%) invert(35%) sepia(91%) saturate(3475%) hue-rotate(334deg) brightness(99%) contrast(98%)',
       },
     },
     NDMobileArtistDetails: {
       bgContainer: {
-        background: '#1a1a1a',
+        background: '#121214',
       },
       artistName: {
-        fontWeight: '600',
-        fontSize: '2em',
+        fontWeight: 700,
+        fontSize: '2rem',
+        letterSpacing: '-0.02em',
       },
     },
     NDDesktopArtistDetails: {
       artistName: {
-        fontWeight: '600',
-        fontSize: '2em',
+        fontWeight: 700,
+        fontSize: '2.2rem',
+        letterSpacing: '-0.02em',
       },
       artistDetail: {
         padding: 'unset',
         paddingBottom: '1rem',
       },
     },
-    RaConfirm: {
-      confirmPrimary: {
-        color: '#fff',
-      },
-    },
-    RaDeleteWithConfirmButton: {
-      deleteButton: {
-        color: '#fff !important',
-      },
-    },
-    RaDeleteWithUndoButton: {
-      deleteButton: {
-        color: '#fff !important',
-      },
-    },
-    RaBulkDeleteWithConfirmButton: {
-      deleteButton: {
-        color: '#fff !important',
-      },
-    },
-    RaBulkDeleteWithUndoButton: {
-      deleteButton: {
-        color: '#fff !important',
-      },
-    },
     RaPaginationActions: {
       currentPageButton: {
-        border: '2px solid #D60017',
-        background: 'transparent',
+        border: '1px solid #FA2D48',
+        color: '#FA2D48',
+        background: 'rgba(250, 45, 72, 0.12)',
+        borderRadius: '8px',
       },
       button: {
-        border: '2px solid #D60017',
+        borderRadius: '8px',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        color: '#FFFFFF',
       },
       actions: {
         '@global': {
-          '.next-page': {
+          '.next-page, .previous-page': {
             border: '0 none',
-          },
-          '.previous-page': {
-            border: '0 none',
+            color: '#FFFFFF',
           },
         },
       },

@@ -1,107 +1,151 @@
 /**
  * amusic.css.js
  *
- * Pixel-perfect Apple Music dark mode stylesheet.
- * Features frosted glassmorphism (backdrop-filter blur), authentic Apple Music
- * red/pink (#FA2D48) accents, modern sleek scrubber with hover expansion,
- * rounded album art with soft drop shadows, and fluid spring transitions.
+ * Apple Music (AMusic) Liquid Glass Dark Theme.
+ * Implements Apple's exact dark mode palette (#FA243C accent, OLED black,
+ * obsidian glass surfaces) and a smooth liquid glass player bar with specular
+ * rim highlights, frosted glass refraction, hover-expanding scrubber,
+ * prominent circular play button, and spring transitions.
  */
 
 const stylesheet = `
 /* ==========================================================================
-   Apple Music Root & Global Aesthetics
+   Apple Music Design Tokens & Variables
    ========================================================================== */
 :root {
-  --am-accent: #FA2D48;
-  --am-accent-hover: #FB3C56;
-  --am-accent-active: #D61A34;
-  --am-accent-glow: rgba(250, 45, 72, 0.35);
-  --am-accent-tint: rgba(250, 45, 72, 0.14);
-  --am-glass-bg: rgba(24, 24, 28, 0.82);
-  --am-glass-border: rgba(255, 255, 255, 0.08);
+  --am-accent: #FA243C;
+  --am-accent-hover: #FF375F;
+  --am-accent-active: #D70015;
+  --am-accent-gradient: linear-gradient(135deg, #FF375F 0%, #FA243C 55%, #D70015 100%);
+  --am-accent-glow: rgba(250, 36, 60, 0.45);
+  --am-accent-tint: rgba(250, 36, 60, 0.15);
+
+  --am-bg-base: #000000;
+  --am-bg-surface: #121214;
+  --am-bg-elevated: #1C1C1E;
+  --am-bg-sidebar: rgba(18, 18, 20, 0.94);
+  --am-bg-glass: rgba(24, 24, 28, 0.65);
+  --am-bg-sheet: rgba(28, 28, 32, 0.92);
+
+  --am-glass-border: rgba(255, 255, 255, 0.12);
+  --am-glass-rim: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22);
+  --am-glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+
   --am-text-primary: #FFFFFF;
-  --am-text-secondary: #A1A1A6;
+  --am-text-secondary: #86868B;
   --am-text-tertiary: #6E6E73;
+
+  --am-ease-spring: cubic-bezier(0.25, 1, 0.5, 1);
+  --am-ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Smooth system font rendering across the UI */
-body, .react-jinke-music-player-main, .music-player-panel {
+/* ==========================================================================
+   Global Base & Typography
+   ========================================================================== */
+html, body {
+  background-color: var(--am-bg-base) !important;
+  color: var(--am-text-primary) !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ==========================================================================
-   Apple Music Floating / Docked Player Bar
+   Smooth Liquid Glass Music Player Dock
    ========================================================================== */
 .react-jinke-music-player-main .music-player-panel {
-  background: var(--am-glass-bg) !important;
-  backdrop-filter: blur(40px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  background: var(--am-bg-glass) !important;
+  backdrop-filter: blur(50px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(50px) saturate(220%) !important;
   border-top: 1px solid var(--am-glass-border) !important;
-  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.55) !important;
-  height: 86px !important;
-  padding: 0 24px !important;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  border-radius: 18px 18px 0 0 !important;
+  box-shadow: 
+    0 -12px 40px rgba(0, 0, 0, 0.7),
+    var(--am-glass-rim),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4) !important;
+  height: 88px !important;
+  padding: 0 28px !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 9999 !important;
+  transition: all 0.35s var(--am-ease-spring) !important;
 }
 
-/* Bottom panel content layout */
+/* Specular liquid sheen along top glass rim */
+.react-jinke-music-player-main .music-player-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Bottom panel inner alignment */
 .react-jinke-music-player-main .music-player-panel .panel-content {
   align-items: center !important;
   height: 100% !important;
+  position: relative !important;
+  overflow: visible !important;
 }
 
 /* ==========================================================================
-   Album Artwork: Modern Rounded Corner (No dated spinning vinyl!)
+   Album Artwork: High-Fidelity Apple Card (Non-spinning)
    ========================================================================== */
 .react-jinke-music-player-main .music-player-panel .panel-content .img-content {
-  width: 56px !important;
-  height: 56px !important;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
-  border-radius: 8px !important;
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 10px !important;
   overflow: hidden !important;
-  margin-right: 14px !important;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  margin-right: 16px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  transition: transform 0.25s var(--am-ease-spring), box-shadow 0.25s ease !important;
 }
 
 .react-jinke-music-player-main .music-player-panel .panel-content .img-content:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  transform: scale(1.06) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75) !important;
 }
 
-/* Disable rotation animation - Apple Music uses static square cards */
+/* Completely remove spinning vinyl rotation animation */
 .react-jinke-music-player-main .music-player-panel .panel-content .img-rotate,
 .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover img.cover,
 .react-jinke-music-player-mobile-cover {
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   animation: none !important;
   transform: none !important;
   object-fit: cover !important;
 }
 
 /* ==========================================================================
-   Typography: Track Title & Artist Info
+   Track Info Typography
    ========================================================================== */
 .react-jinke-music-player-main .songTitle,
 .react-jinke-music-player-main .music-player-panel .panel-content .audio-title {
   color: var(--am-text-primary) !important;
   font-weight: 600 !important;
   font-size: 0.95rem !important;
-  letter-spacing: -0.01em !important;
+  letter-spacing: -0.015em !important;
   transition: color 0.15s ease !important;
 }
 
 .react-jinke-music-player-main .music-player-panel .panel-content .player-singer {
   color: var(--am-text-secondary) !important;
-  font-size: 0.85rem !important;
+  font-size: 0.825rem !important;
   font-weight: 400 !important;
   margin-top: 2px !important;
 }
 
 /* ==========================================================================
-   Scrubber / Progress Bar: Apple Music Sleek Line with Expansion
+   Scrubber Bar: Apple Music Precision Liquid Progress
    ========================================================================== */
 .react-jinke-music-player-main .progress-bar-content {
-  padding: 6px 0 !important;
+  padding: 8px 0 !important;
   cursor: pointer !important;
 }
 
@@ -110,47 +154,47 @@ body, .react-jinke-music-player-main, .music-player-panel {
   background-color: rgba(255, 255, 255, 0.16) !important;
   height: 4px !important;
   border-radius: 9999px !important;
-  transition: height 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  transition: height 0.18s var(--am-ease-spring) !important;
 }
 
-/* Track (Played portion) */
+/* Played track with Apple Music radiant crimson gradient */
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-track,
 .react-jinke-music-player-mobile-progress .rc-slider-track {
-  background-color: var(--am-accent) !important;
+  background: var(--am-accent-gradient) !important;
   height: 4px !important;
   border-radius: 9999px !important;
-  box-shadow: 0 0 10px rgba(250, 45, 72, 0.3) !important;
-  transition: height 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  box-shadow: 0 0 12px var(--am-accent-glow) !important;
+  transition: height 0.18s var(--am-ease-spring) !important;
 }
 
-/* Expand track and rail on scrubber hover */
+/* Scrubber expansion on hover */
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-rail,
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-track {
   height: 6px !important;
 }
 
-/* Scrubber Thumb (White handle that emerges on hover/drag) */
+/* Apple white pearl handle */
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-handle,
 .react-jinke-music-player-mobile-progress .rc-slider-handle {
   width: 14px !important;
   height: 14px !important;
   margin-top: -5px !important;
   background-color: #FFFFFF !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
   opacity: 0 !important;
   transform: scale(0.6) !important;
-  transition: opacity 0.15s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  transition: opacity 0.15s ease, transform 0.2s var(--am-ease-spring) !important;
 }
 
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-handle,
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-handle:active {
   opacity: 1 !important;
   transform: scale(1) !important;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Progress bar timestamps */
+/* Timestamps */
 .react-jinke-music-player-main .music-player-panel .panel-content .audio-time {
   color: var(--am-text-secondary) !important;
   font-size: 0.75rem !important;
@@ -159,36 +203,54 @@ body, .react-jinke-music-player-main, .music-player-panel {
 }
 
 /* ==========================================================================
-   Playback Controls & Action Icons
+   Playback Controls: Prominent Apple Music Play Button & Icons
    ========================================================================== */
 .react-jinke-music-player-main .music-player-panel svg {
-  color: rgba(255, 255, 255, 0.85) !important;
-  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  transition: all 0.2s var(--am-ease-spring) !important;
 }
 
 .react-jinke-music-player-main .music-player-panel svg:hover {
-  color: var(--am-accent) !important;
-  transform: scale(1.12) !important;
+  color: var(--am-accent-hover) !important;
+  transform: scale(1.14) !important;
 }
 
 .react-jinke-music-player-main .music-player-panel svg:active {
   transform: scale(0.92) !important;
 }
 
-.react-jinke-music-player-main .music-player-panel button:disabled svg {
-  opacity: 0.2 !important;
-  pointer-events: none !important;
+/* Distinct Prominent Play/Pause Button */
+.react-jinke-music-player-main .play-btn {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border-radius: 50% !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 12px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.22s var(--am-ease-spring) !important;
 }
 
-/* Play/Pause Button */
 .react-jinke-music-player-main .play-btn svg {
-  color: #FFFFFF !important;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)) !important;
+  color: #000000 !important;
+  font-size: 20px !important;
+}
+
+.react-jinke-music-player-main .play-btn:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.35) !important;
 }
 
 .react-jinke-music-player-main .play-btn:hover svg {
-  color: var(--am-accent-hover) !important;
-  transform: scale(1.18) !important;
+  color: #000000 !important;
+  transform: none !important;
+}
+
+.react-jinke-music-player-main .play-btn:active {
+  transform: scale(0.92) !important;
 }
 
 /* Active states (Shuffle, Repeat, Lyrics enabled) */
@@ -202,74 +264,59 @@ body, .react-jinke-music-player-main, .music-player-panel {
   color: var(--am-accent) !important;
 }
 
-.react-jinke-music-player-main .loading svg {
-  color: var(--am-accent) !important;
-}
-
 /* ==========================================================================
-   Queue / Playlist Drawer (Apple Music "Up Next" Sheet)
+   Up Next Queue Sheet (Apple Music Glass Drawer)
    ========================================================================== */
 .audio-lists-panel {
-  background: rgba(24, 24, 28, 0.94) !important;
-  backdrop-filter: blur(40px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  background: var(--am-bg-sheet) !important;
+  backdrop-filter: blur(60px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(220%) !important;
   border: 1px solid var(--am-glass-border) !important;
-  border-radius: 16px 16px 0 0 !important;
-  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.7) !important;
+  border-radius: 20px 20px 0 0 !important;
+  box-shadow: 0 -16px 60px rgba(0, 0, 0, 0.8), var(--am-glass-rim) !important;
 }
 
 .audio-lists-panel-header {
   border-bottom: 1px solid var(--am-glass-border) !important;
   color: var(--am-text-primary) !important;
-  font-weight: 600 !important;
 }
 
 .audio-lists-panel-header-title {
-  font-size: 1rem !important;
+  font-size: 1.05rem !important;
   font-weight: 700 !important;
+  letter-spacing: -0.015em !important;
 }
 
 .audio-lists-panel-header-num {
   color: var(--am-accent) !important;
   background: var(--am-accent-tint) !important;
   border-radius: 9999px !important;
-  padding: 2px 8px !important;
+  padding: 3px 10px !important;
   font-size: 0.75rem !important;
   font-weight: 600 !important;
 }
 
-/* Queue items */
 .audio-lists-panel-content .audio-item {
   border-radius: 8px !important;
-  margin: 2px 8px !important;
-  padding: 8px 12px !important;
+  margin: 3px 8px !important;
+  padding: 10px 14px !important;
   color: var(--am-text-secondary) !important;
-  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  transition: all 0.18s var(--am-ease-spring) !important;
 }
 
 .audio-lists-panel-content .audio-item:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   color: #FFFFFF !important;
 }
 
-.audio-lists-panel-content .audio-item:hover svg {
-  color: var(--am-accent) !important;
-}
-
-/* Currently playing queue track */
-.audio-lists-panel-content .audio-item.playing,
-.react-jinke-music-player-main .audio-item.playing svg {
+.audio-lists-panel-content .audio-item.playing {
   background: var(--am-accent-tint) !important;
   color: var(--am-accent) !important;
   font-weight: 600 !important;
 }
 
-.react-jinke-music-player-main .audio-item.playing .player-singer {
-  color: var(--am-accent) !important;
-}
-
 /* ==========================================================================
-   Volume Slider
+   Volume Slider (Apple Clean Line)
    ========================================================================== */
 .react-jinke-music-player-main .music-player-panel .panel-content .sound-operation .rc-slider-rail {
   background-color: rgba(255, 255, 255, 0.18) !important;
@@ -289,18 +336,18 @@ body, .react-jinke-music-player-main, .music-player-panel {
    Mobile Player Screen (Apple Music iOS Now Playing Style)
    ========================================================================== */
 .react-jinke-music-player-mobile {
-  background: rgba(18, 18, 20, 0.98) !important;
-  backdrop-filter: blur(50px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(50px) saturate(200%) !important;
+  background: rgba(14, 14, 16, 0.98) !important;
+  backdrop-filter: blur(60px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(220%) !important;
 }
 
 .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover {
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7) !important;
-  border-radius: 14px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8) !important;
+  border-radius: 16px !important;
 }
 
 .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover img.cover {
-  border-radius: 14px !important;
+  border-radius: 16px !important;
 }
 
 /* ==========================================================================
@@ -322,18 +369,7 @@ body, .react-jinke-music-player-main, .music-player-panel {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.35);
-}
-
-.lastfm-icon, 
-.musicbrainz-icon {
-  color: var(--am-text-secondary) !important;
-  transition: color 0.15s ease !important;
-}
-
-.lastfm-icon:hover,
-.musicbrainz-icon:hover {
-  color: var(--am-accent) !important;
+  background-color: rgba(255, 255, 255, 0.38);
 }
 `
 

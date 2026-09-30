@@ -212,11 +212,11 @@ const Player = () => {
       loadAudioErrorPlayNext: false,
       autoPlayInitLoadPlayList: true,
       clearPriorAudioLists: false,
-      showDestroy: true,
+      showDestroy: false,
       showDownload: false,
       showLyric: true,
       showReload: false,
-      toggleMode: !isDesktop,
+      toggleMode: false,
       glassBg: false,
       showThemeSwitch: false,
       showMediaSession: true,
@@ -226,7 +226,6 @@ const Player = () => {
         top: 300,
         left: 120,
       },
-      volumeFade: { fadeIn: 200, fadeOut: 200 },
       renderAudioTitle: (audioInfo, isMobile) => (
         <AudioTitle
           audioInfo={audioInfo}
@@ -241,7 +240,7 @@ const Player = () => {
         pause: <ApplePauseIcon size={18} />,
       },
     }),
-    [gainInfo, isDesktop, playerTheme, translate, playerState.mode],
+    [gainInfo, playerTheme, translate, playerState.mode],
   )
 
   const options = useMemo(() => {

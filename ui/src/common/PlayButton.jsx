@@ -50,8 +50,12 @@ export const PlayButton = ({ record, size = 'small', className }) => {
     e.preventDefault()
 
     if (isThisAlbum) {
-      if (typeof window !== 'undefined' && window.navidromeAudioInstance?.togglePlay) {
-        window.navidromeAudioInstance.togglePlay()
+      if (typeof window !== 'undefined' && window.navidromeAudioInstance) {
+        if (window.navidromeAudioInstance.paused) {
+          window.navidromeAudioInstance.play()
+        } else {
+          window.navidromeAudioInstance.pause()
+        }
       } else {
         const playBtn = document.querySelector('.react-jinke-music-player-main .play-btn')
         if (playBtn) {
@@ -70,6 +74,10 @@ export const PlayButton = ({ record, size = 'small', className }) => {
   return (
     <IconButton
       onClick={handleClick}
+      onMouseDown={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+      }}
       aria-label={isPlaying ? 'pause' : 'play'}
       className={className}
       size={size}

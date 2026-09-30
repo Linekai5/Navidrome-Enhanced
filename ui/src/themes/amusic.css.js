@@ -253,27 +253,28 @@ main {
   width: 100% !important;
   margin: 0 !important;
   position: relative !important;
-  height: 18px !important;
-  display: flex !important;
-  align-items: center !important;
+  height: 14px !important;
+  display: block !important;
   cursor: pointer !important;
 }
 
-.react-jinke-music-player-main .music-player-panel .panel-content .rc-slider {
+.react-jinke-music-player-main .music-player-panel .panel-content .rc-slider,
+.react-jinke-music-player-mobile-progress .rc-slider {
   position: relative !important;
   width: 100% !important;
-  height: 16px !important;
+  height: 14px !important;
   padding: 5px 0 !important;
   touch-action: none !important;
   box-sizing: border-box !important;
-  display: flex !important;
-  align-items: center !important;
+  display: block !important;
 }
 
 /* Scrubber Rail (Apple Frosted Glass Track) */
-.react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-rail {
+.react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-rail,
+.react-jinke-music-player-mobile-progress .rc-slider-rail {
   background-color: rgba(255, 255, 255, 0.22) !important;
-  height: 5px !important;
+  height: 4px !important;
+  top: 5px !important;
   border-radius: 9999px !important;
   transition: height 0.18s var(--am-ease-spring), background-color 0.18s ease !important;
 }
@@ -282,7 +283,8 @@ main {
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-track,
 .react-jinke-music-player-mobile-progress .rc-slider-track {
   background: var(--am-accent-gradient) !important;
-  height: 5px !important;
+  height: 4px !important;
+  top: 5px !important;
   border-radius: 9999px !important;
   box-shadow: 0 0 12px var(--am-accent-glow) !important;
   transition: height 0.18s var(--am-ease-spring) !important;
@@ -290,27 +292,30 @@ main {
 
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-rail,
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-track {
-  height: 7px !important;
+  height: 6px !important;
+  top: 4px !important;
   background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Apple Music Scrubber Pearl Handle - Smooth, Beautiful, and Clear */
+/* Apple Music Scrubber Pearl Handle - Perfectly centered mathematically */
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-handle,
 .react-jinke-music-player-mobile-progress .rc-slider-handle {
   width: 14px !important;
   height: 14px !important;
-  margin-top: -4.5px !important;
+  top: 5px !important;
+  margin-top: -5px !important;
+  margin-left: -7px !important;
   background-color: #FFFFFF !important;
   border: 1px solid rgba(0, 0, 0, 0.2) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.4) !important;
   opacity: 1 !important;
-  transform: scale(1) !important;
+  transform: none !important;
   transition: transform 0.2s var(--am-ease-spring), box-shadow 0.2s ease !important;
 }
 
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-handle,
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-handle:active {
-  transform: scale(1.3) !important;
+  transform: scale(1.25) !important;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.75), 0 0 0 2px rgba(255, 255, 255, 0.7) !important;
 }
 
@@ -361,11 +366,13 @@ main {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
   transition: all 0.22s var(--am-ease-spring) !important;
   flex-shrink: 0 !important;
+  cursor: pointer !important;
 }
 
 .react-jinke-music-player-main .play-btn svg {
   color: #000000 !important;
   fill: #000000 !important;
+  pointer-events: none !important;
 }
 
 .react-jinke-music-player-main .play-btn:hover {
@@ -380,6 +387,21 @@ main {
 .react-jinke-music-player-main .prev-audio svg,
 .react-jinke-music-player-main .next-audio svg {
   font-size: 24px !important;
+}
+
+/* Completely eliminate random circles, close buttons, and mini controller */
+.react-jinke-music-player-controller,
+.audio-circle-process-bar,
+.react-jinke-music-player .music-player-controller,
+.react-jinke-music-player .music-player-controller-setting,
+.react-jinke-music-player-main .hide-panel,
+.react-jinke-music-player-main .destroy-btn,
+.react-jinke-music-player-main .music-player-panel .destroy-btn,
+.react-jinke-music-player .destroy-btn {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* Reset any legacy circle border overrides */
@@ -526,7 +548,7 @@ main {
 }
 
 /* ==========================================================================
-   Mobile Player Screen
+   Mobile Player Screen & Anti-Spinning Disc Rules
    ========================================================================== */
 .react-jinke-music-player-mobile {
   background: rgba(14, 14, 16, 0.98) !important;
@@ -534,13 +556,43 @@ main {
   -webkit-backdrop-filter: blur(60px) saturate(220%) !important;
 }
 
-.react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover {
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8) !important;
-  border-radius: 16px !important;
+/* Completely eliminate all spinning disc / vinyl rotation animations */
+.img-rotate,
+.img-rotate-pause,
+.img-rotate-reset,
+.react-jinke-music-player-main .img-rotate,
+.react-jinke-music-player-mobile-cover,
+.react-jinke-music-player-mobile-cover img.cover,
+.react-jinke-music-player-main .music-player-panel .panel-content .img-content,
+.react-jinke-music-player-main .music-player-panel .panel-content .img-rotate,
+.music-player-controller,
+.music-player-controller:before {
+  animation: none !important;
+  -webkit-animation: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
 }
 
-.react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover img.cover {
+.react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover,
+.react-jinke-music-player-mobile-cover {
+  width: min(280px, 70vw) !important;
+  height: min(280px, 70vw) !important;
   border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75) !important;
+  margin: 20px auto !important;
+  overflow: hidden !important;
+  animation: none !important;
+}
+
+.react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover img.cover,
+.react-jinke-music-player-mobile-cover img.cover {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 16px !important;
+  animation: none !important;
+  transform: none !important;
+  object-fit: cover !important;
 }
 
 /* ==========================================================================

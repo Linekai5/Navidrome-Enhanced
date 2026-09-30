@@ -94,15 +94,15 @@ main {
 }
 
 /* ==========================================================================
-   Floating Liquid Glass Island Player Dock (Continuous 9999px Pill)
+   Floating Liquid Glass Island Player Dock (Apple Music Pill)
    ========================================================================== */
 .react-jinke-music-player-main .music-player-panel {
   position: fixed !important;
   left: 50% !important;
   bottom: 24px !important;
   transform: translateX(-50%) !important;
-  width: min(880px, calc(100% - 48px)) !important;
-  height: 76px !important;
+  width: min(1360px, calc(100% - 48px)) !important;
+  height: 78px !important;
   border-radius: 9999px !important;
   background: var(--am-bg-glass) !important;
   backdrop-filter: blur(50px) saturate(220%) !important;
@@ -112,10 +112,11 @@ main {
     var(--am-glass-shadow),
     var(--am-glass-rim),
     inset 0 -1px 1px 0 rgba(0, 0, 0, 0.45) !important;
-  padding: 0 28px !important;
+  padding: 0 24px !important;
   z-index: 9999 !important;
   overflow: visible !important;
   transition: all 0.35s var(--am-ease-spring) !important;
+  box-sizing: border-box !important;
 }
 
 /* Specular refraction sheen */
@@ -123,48 +124,36 @@ main {
   content: "";
   position: absolute;
   top: 0;
-  left: 15%;
-  right: 15%;
+  left: 10%;
+  right: 10%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
   pointer-events: none;
   z-index: 2;
-}
-
-/* Mobile responsive floating pill */
-@media (max-width: 768px) {
-  .react-jinke-music-player-main .music-player-panel {
-    width: calc(100% - 24px) !important;
-    left: 12px !important;
-    right: 12px !important;
-    transform: none !important;
-    bottom: 12px !important;
-    border-radius: 9999px !important;
-    height: 70px !important;
-    padding: 0 16px !important;
-  }
 }
 
 .react-jinke-music-player-main .music-player-panel .panel-content {
   display: flex !important;
   align-items: center !important;
   height: 100% !important;
+  width: 100% !important;
   position: relative !important;
   overflow: visible !important;
+  gap: 12px !important;
 }
 
 /* ==========================================================================
    Album Artwork in Floating Dock
    ========================================================================== */
 .react-jinke-music-player-main .music-player-panel .panel-content .img-content {
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 9px !important;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 10px !important;
   overflow: hidden !important;
-  margin-right: 14px !important;
+  margin: 0 !important;
   flex-shrink: 0 !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   transition: transform 0.25s var(--am-ease-spring), box-shadow 0.25s ease !important;
 }
 
@@ -176,97 +165,174 @@ main {
 .react-jinke-music-player-main .music-player-panel .panel-content .img-rotate,
 .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover img.cover,
 .react-jinke-music-player-mobile-cover {
-  border-radius: 9px !important;
+  border-radius: 10px !important;
   animation: none !important;
   transform: none !important;
   object-fit: cover !important;
 }
 
 /* ==========================================================================
-   Track Info Typography
+   Progress Bar & Track Info: Wide, Prominent Apple Music Scrubber
    ========================================================================== */
-.react-jinke-music-player-main .songTitle,
+.react-jinke-music-player-main .music-player-panel .panel-content .progress-bar-content {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  flex: 2 1 300px !important;
+  min-width: 140px !important;
+  padding: 0 8px !important;
+  overflow: hidden !important;
+}
+
+/* Track Title & Artist Row */
 .react-jinke-music-player-main .music-player-panel .panel-content .audio-title {
+  display: block !important;
+  width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.3 !important;
+  margin-bottom: 2px !important;
+}
+
+.react-jinke-music-player-main .music-player-panel .panel-content .audio-title a {
+  display: inline-flex !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+  max-width: 100% !important;
+  text-decoration: none !important;
+}
+
+.react-jinke-music-player-main .songTitle {
   color: var(--am-text-primary) !important;
   font-weight: 600 !important;
-  font-size: 0.9rem !important;
+  font-size: 0.92rem !important;
   letter-spacing: -0.015em !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  max-width: 160px !important;
 }
 
-.react-jinke-music-player-main .music-player-panel .panel-content .player-singer {
+.react-jinke-music-player-main .music-player-panel .panel-content .songInfo,
+.react-jinke-music-player-main .music-player-panel .panel-content .songArtist,
+.react-jinke-music-player-main .music-player-panel .panel-content .songAlbum {
   color: var(--am-text-secondary) !important;
-  font-size: 0.78rem !important;
+  font-size: 0.8rem !important;
   font-weight: 400 !important;
-  margin-top: 1px !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  max-width: 160px !important;
 }
 
-/* ==========================================================================
-   Scrubber Bar: Apple Precision Liquid Slider
-   ========================================================================== */
-.react-jinke-music-player-main .progress-bar-content {
-  padding: 6px 0 !important;
+/* Audio Main Row: [Current Time] [Wide Scrubber Track] [Duration] */
+.react-jinke-music-player-main .music-player-panel .panel-content .audio-main,
+.react-jinke-music-player-main .music-player-panel .panel-content .progress-bar-content section.audio-main {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin-top: 3px !important;
+  gap: 10px !important;
+}
+
+.react-jinke-music-player-main .music-player-panel .panel-content .current-time,
+.react-jinke-music-player-main .music-player-panel .panel-content .duration,
+.react-jinke-music-player-main .music-player-panel .panel-content .audio-time {
+  color: var(--am-text-secondary) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  font-variant-numeric: tabular-nums !important;
+  min-width: 34px !important;
+  flex-shrink: 0 !important;
+  text-align: center !important;
+  user-select: none !important;
+  opacity: 0.85 !important;
+}
+
+.react-jinke-music-player-main .music-player-panel .panel-content .progress-bar {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  margin: 0 !important;
+  position: relative !important;
+  height: 18px !important;
+  display: flex !important;
+  align-items: center !important;
   cursor: pointer !important;
 }
 
-.react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-rail {
-  background-color: rgba(255, 255, 255, 0.16) !important;
-  height: 4px !important;
-  border-radius: 9999px !important;
-  transition: height 0.18s var(--am-ease-spring) !important;
+.react-jinke-music-player-main .music-player-panel .panel-content .rc-slider {
+  position: relative !important;
+  width: 100% !important;
+  height: 16px !important;
+  padding: 5px 0 !important;
+  touch-action: none !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
+/* Scrubber Rail (Apple Frosted Glass Track) */
+.react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-rail {
+  background-color: rgba(255, 255, 255, 0.22) !important;
+  height: 5px !important;
+  border-radius: 9999px !important;
+  transition: height 0.18s var(--am-ease-spring), background-color 0.18s ease !important;
+}
+
+/* Scrubber Played Track (Radiant Apple Music Crimson Gradient) */
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-track,
 .react-jinke-music-player-mobile-progress .rc-slider-track {
   background: var(--am-accent-gradient) !important;
-  height: 4px !important;
+  height: 5px !important;
   border-radius: 9999px !important;
-  box-shadow: 0 0 10px var(--am-accent-glow) !important;
+  box-shadow: 0 0 12px var(--am-accent-glow) !important;
   transition: height 0.18s var(--am-ease-spring) !important;
 }
 
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-rail,
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-track {
-  height: 6px !important;
+  height: 7px !important;
+  background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
+/* Apple Music Scrubber Pearl Handle - Smooth, Beautiful, and Clear */
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-handle,
 .react-jinke-music-player-mobile-progress .rc-slider-handle {
   width: 14px !important;
   height: 14px !important;
-  margin-top: -5px !important;
+  margin-top: -4.5px !important;
   background-color: #FFFFFF !important;
-  border: 1px solid rgba(0, 0, 0, 0.15) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
-  opacity: 0 !important;
-  transform: scale(0.6) !important;
-  transition: opacity 0.15s ease, transform 0.2s var(--am-ease-spring) !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.4) !important;
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  transition: transform 0.2s var(--am-ease-spring), box-shadow 0.2s ease !important;
 }
 
 .react-jinke-music-player-main .progress-bar-content:hover .rc-slider-handle,
 .react-jinke-music-player-main .music-player-panel .panel-content .rc-slider-handle:active {
-  opacity: 1 !important;
-  transform: scale(1) !important;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 255, 255, 0.6) !important;
-}
-
-.react-jinke-music-player-main .music-player-panel .panel-content .audio-time {
-  color: var(--am-text-secondary) !important;
-  font-size: 0.725rem !important;
-  font-weight: 500 !important;
-  font-variant-numeric: tabular-nums !important;
+  transform: scale(1.3) !important;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.75), 0 0 0 2px rgba(255, 255, 255, 0.7) !important;
 }
 
 /* ==========================================================================
-   Custom Smooth Play & Pause Buttons on Player
+   Playback Controls & Action Toolbar
    ========================================================================== */
+.react-jinke-music-player-main .music-player-panel .panel-content .player-content {
+  display: flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  padding-left: 0 !important;
+  margin-left: auto !important;
+  gap: 4px !important;
+}
+
+.react-jinke-music-player-main .music-player-panel .panel-content .player-content > .group {
+  margin: 0 4px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 .react-jinke-music-player-main .music-player-panel svg {
   color: rgba(255, 255, 255, 0.88) !important;
   transition: all 0.2s var(--am-ease-spring) !important;
@@ -286,14 +352,15 @@ main {
   background: #FFFFFF !important;
   color: #000000 !important;
   border-radius: 50% !important;
-  width: 38px !important;
-  height: 38px !important;
+  width: 40px !important;
+  height: 40px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  margin: 0 10px !important;
+  margin: 0 8px !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
   transition: all 0.22s var(--am-ease-spring) !important;
+  flex-shrink: 0 !important;
 }
 
 .react-jinke-music-player-main .play-btn svg {
@@ -308,6 +375,11 @@ main {
 
 .react-jinke-music-player-main .play-btn:active {
   transform: scale(0.92) !important;
+}
+
+.react-jinke-music-player-main .prev-audio svg,
+.react-jinke-music-player-main .next-audio svg {
+  font-size: 24px !important;
 }
 
 /* Reset any legacy circle border overrides */
@@ -384,7 +456,7 @@ main {
 .audio-lists-panel {
   position: fixed !important;
   bottom: 114px !important;
-  right: max(24px, calc((100vw - 880px) / 2)) !important;
+  right: max(24px, calc((100vw - 1360px) / 2 + 16px)) !important;
   width: 400px !important;
   max-width: calc(100vw - 48px) !important;
   max-height: 520px !important;
@@ -469,6 +541,116 @@ main {
 
 .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover img.cover {
   border-radius: 16px !important;
+}
+
+/* ==========================================================================
+   Adaptive Responsiveness for Audio Player & Progress Bar
+   ========================================================================== */
+
+/* Laptops / Smaller Desktops (<= 1100px) */
+@media (max-width: 1100px) {
+  .react-jinke-music-player-main .music-player-panel {
+    width: calc(100% - 36px) !important;
+    padding: 0 20px !important;
+  }
+  .react-jinke-music-player-main .music-player-panel .panel-content .play-sounds .sound-operation {
+    width: 60px !important;
+  }
+  .react-jinke-music-player-main .music-player-panel .panel-content .player-content > .group {
+    margin: 0 3px !important;
+  }
+}
+
+/* Tablets (<= 850px) */
+@media (max-width: 850px) {
+  .react-jinke-music-player-main .music-player-panel {
+    width: calc(100% - 24px) !important;
+    bottom: 16px !important;
+    height: 74px !important;
+    padding: 0 16px !important;
+  }
+  .react-jinke-music-player-main .music-player-panel .panel-content .progress-bar-content {
+    min-width: 130px !important;
+  }
+  .react-jinke-music-player-main .music-player-panel .panel-content .play-sounds .sound-operation,
+  .react-jinke-music-player-main .music-player-panel .panel-content .hide-panel,
+  .react-jinke-music-player-main .music-player-panel .panel-content .destroy-btn {
+    display: none !important;
+  }
+}
+
+/* Mobile Screens (<= 768px) - CRITICAL: Override library's display:none on progress-bar-content */
+@media (max-width: 768px) {
+  .react-jinke-music-player-main .music-player-panel {
+    width: calc(100% - 20px) !important;
+    left: 10px !important;
+    right: 10px !important;
+    transform: none !important;
+    bottom: 12px !important;
+    border-radius: 9999px !important;
+    height: 72px !important;
+    padding: 0 14px !important;
+  }
+
+  /* Force progress bar content to STAY VISIBLE on mobile! */
+  .react-jinke-music-player-main .music-player-panel .panel-content .progress-bar-content {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    min-width: 100px !important;
+    padding: 0 6px !important;
+    overflow: hidden !important;
+  }
+
+  .react-jinke-music-player-main .music-player-panel .panel-content .img-content {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .react-jinke-music-player-main .music-player-panel .panel-content .audio-main,
+  .react-jinke-music-player-main .music-player-panel .panel-content .progress-bar-content section.audio-main {
+    gap: 6px !important;
+  }
+
+  .react-jinke-music-player-main .music-player-panel .panel-content .play-sounds,
+  .react-jinke-music-player-main .music-player-panel .panel-content .hide-panel,
+  .react-jinke-music-player-main .music-player-panel .panel-content .destroy-btn {
+    display: none !important;
+  }
+}
+
+/* Small Mobile Screens (<= 500px) */
+@media (max-width: 500px) {
+  .react-jinke-music-player-main .music-player-panel {
+    width: calc(100% - 12px) !important;
+    left: 6px !important;
+    right: 6px !important;
+    bottom: 8px !important;
+    height: 66px !important;
+    padding: 0 10px !important;
+  }
+
+  .react-jinke-music-player-main .music-player-panel .panel-content .img-content {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .react-jinke-music-player-main .play-btn {
+    width: 34px !important;
+    height: 34px !important;
+    margin: 0 4px !important;
+  }
+
+  .react-jinke-music-player-main .music-player-panel .panel-content .play-mode-title,
+  .react-jinke-music-player-main .music-player-panel .panel-content .lyric-btn,
+  .react-jinke-music-player-main .music-player-panel .panel-content [data-testid="save-queue-button"] {
+    display: none !important;
+  }
+
+  .react-jinke-music-player-main .music-player-panel .panel-content .current-time,
+  .react-jinke-music-player-main .music-player-panel .panel-content .duration {
+    font-size: 0.68rem !important;
+    min-width: 28px !important;
+  }
 }
 
 /* ==========================================================================

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import clsx from 'clsx'
 import { useInterval } from '../common'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from '@material-ui/core'
@@ -49,6 +50,7 @@ const Player = () => {
   const currentTrackIdRef = useRef(null)
   const stoppedRef = useRef(false)
   const [audioInstance, setAudioInstance] = useState(null)
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false)
   const isDesktop = useMediaQuery('(min-width:810px)')
   const isMobilePlayer =
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -209,6 +211,7 @@ const Player = () => {
       bounds: 'body',
       playMode: playerState.mode,
       mode: 'full',
+      responsive: false,
       loadAudioErrorPlayNext: false,
       autoPlayInitLoadPlayList: true,
       clearPriorAudioLists: false,
@@ -369,11 +372,18 @@ const Player = () => {
     [dispatch, dataProvider, currentTrackId],
   )
 
-  const onCoverClick = useCallback((mode, audioLists, audioInfo) => {
-    if (mode === 'full' && audioInfo?.song?.albumId) {
-      window.location.href = `#/album/${audioInfo.song.albumId}/show`
-    }
-  }, [])
+  const onCoverClick = useCallback(
+    (mode, audioLists, audioInfo) => {
+      if (window.innerWidth <= 768) {
+        setIsMobileExpanded((prev) => !prev)
+        return
+      }
+      if (mode === 'full' && audioInfo?.song?.albumId) {
+        window.location.href = `#/album/${audioInfo.song.albumId}/show`
+      }
+    },
+    [],
+  )
 
   const onAudioError = useCallback(
     (error, currentPlayId, audioLists, audioInfo) => {
@@ -428,6 +438,91 @@ const Player = () => {
     }
   }, [isMobilePlayer, audioInstance])
 
+  // Mobile Apple Music MiniPlayer tap-to-expand and swipe-to-dismiss gestures
+  useEffect(() => {
+    let startY = 0
+
+    const handlePanelClick = (e) => {
+      if (window.innerWidth > 768) return
+      // Don't trigger expand if tapping playback control buttons or sliders
+      if (
+        e.target.closest('.play-btn') ||
+        e.target.closest('.next-audio') ||
+        e.target.closest('.prev-audio') ||
+        e.target.closest('.rc-slider') ||
+        e.target.closest('.rc-slider-handle') ||
+        e.target.closest('.audio-lists-btn') ||
+        e.target.closest('.am-mobile-sheet-close') ||
+        e.target.closest('.am-mobile-sheet-grabber')
+      ) {
+        return
+      }
+      if (!isMobileExpanded) {
+        setIsMobileExpanded(true)
+      }
+    }
+
+    const handleTouchStart = (e) => {
+      if (window.innerWidth > 768) return
+      startY = e.touches[0].clientY
+    }
+
+    const handleTouchEnd = (e) => {
+      if (window.innerWidth > 768) return
+      const endY = e.changedTouches[0].clientY
+      const deltaY = endY - startY
+      // Swipe down when sheet is open -> collapse to MiniPlayer
+      if (isMobileExpanded && deltaY > 45) {
+        setIsMobileExpanded(false)
+      }
+      // Swipe up on MiniPlayer -> expand to Now Playing sheet
+      if (!isMobileExpanded && deltaY < -35) {
+        setIsMobileExpanded(true)
+      }
+    }
+
+    const panel = document.querySelector(
+      '.react-jinke-music-player-main .music-player-panel',
+    )
+    if (panel) {
+      panel.addEventListener('click', handlePanelClick)
+      panel.addEventListener('touchstart', handleTouchStart, { passive: true })
+      panel.addEventListener('touchend', handleTouchEnd, { passive: true })
+      return () => {
+        panel.removeEventListener('click', handlePanelClick)
+        panel.removeEventListener('touchstart', handleTouchStart)
+        panel.removeEventListener('touchend', handleTouchEnd)
+      }
+    }
+  }, [isMobileExpanded])
+
+  // Collapse sheet on route navigation or Escape key
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (isMobileExpanded) {
+        setIsMobileExpanded(false)
+      }
+    }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isMobileExpanded) {
+        setIsMobileExpanded(false)
+      }
+    }
+    window.addEventListener('hashchange', handleRouteChange)
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isMobileExpanded])
+
+  // Reset expanded state if queue is emptied
+  useEffect(() => {
+    if (!visible && isMobileExpanded) {
+      setIsMobileExpanded(false)
+    }
+  }, [visible, isMobileExpanded])
+
   // Report every seek (including programmatic ones the library does not surface
   // via onAudioSeeked, e.g. restartCurrentOnPrev). Debounce coalesces drag
   // bursts into one report at the final position.
@@ -459,9 +554,42 @@ const Player = () => {
 
   return (
     <ThemeProvider theme={createMuiTheme(theme)}>
+      {isMobileExpanded && (
+        <div
+          className="am-mobile-sheet-header"
+          onClick={() => setIsMobileExpanded(false)}
+        >
+          <div className="am-mobile-sheet-grabber" />
+          <button
+            type="button"
+            className="am-mobile-sheet-close"
+            aria-label="Collapse player"
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsMobileExpanded(false)
+            }}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      )}
       <ReactJkMusicPlayer
         {...options}
-        className={classes.player}
+        className={clsx(
+          classes.player,
+          isMobileExpanded && 'am-mobile-expanded',
+        )}
         onAudioListsChange={onAudioListsChange}
         onAudioVolumeChange={onAudioVolumeChange}
         onAudioProgress={onAudioProgress}

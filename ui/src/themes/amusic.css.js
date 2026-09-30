@@ -556,7 +556,7 @@ main {
   -webkit-backdrop-filter: blur(60px) saturate(220%) !important;
 }
 
-/* Completely eliminate all spinning disc / vinyl rotation animations */
+/* Completely eliminate all spinning disc / vinyl rotation animations across all views */
 .img-rotate,
 .img-rotate-pause,
 .img-rotate-reset,
@@ -573,14 +573,25 @@ main {
   -webkit-transform: none !important;
 }
 
+/* Apple Music Now Playing Sheet Fallback Styling */
+.react-jinke-music-player-mobile::before {
+  content: "" !important;
+  display: block !important;
+  width: 38px !important;
+  height: 5px !important;
+  border-radius: 3px !important;
+  background: rgba(255, 255, 255, 0.35) !important;
+  margin: calc(10px + env(safe-area-inset-top, 12px)) auto 16px auto !important;
+}
+
 .react-jinke-music-player-mobile .react-jinke-music-player-mobile-cover,
 .react-jinke-music-player-mobile-cover {
-  width: min(280px, 70vw) !important;
-  height: min(280px, 70vw) !important;
-  border-radius: 16px !important;
+  width: min(300px, 72vw) !important;
+  height: min(300px, 72vw) !important;
+  border-radius: 20px !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75) !important;
-  margin: 20px auto !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85) !important;
+  margin: 12px auto !important;
   overflow: hidden !important;
   animation: none !important;
 }
@@ -589,7 +600,7 @@ main {
 .react-jinke-music-player-mobile-cover img.cover {
   width: 100% !important;
   height: 100% !important;
-  border-radius: 16px !important;
+  border-radius: 20px !important;
   animation: none !important;
   transform: none !important;
   object-fit: cover !important;
@@ -631,77 +642,601 @@ main {
   }
 }
 
-/* Mobile Screens (<= 768px) - CRITICAL: Override library's display:none on progress-bar-content */
+/* ==========================================================================
+   iPhone 13 & Mobile Experience (<= 768px): Apple Music MiniPlayer & Sheet
+   ========================================================================== */
 @media (max-width: 768px) {
-  .react-jinke-music-player-main .music-player-panel {
-    width: calc(100% - 20px) !important;
-    left: 10px !important;
-    right: 10px !important;
-    transform: none !important;
-    bottom: 12px !important;
-    border-radius: 9999px !important;
-    height: 72px !important;
-    padding: 0 14px !important;
+  /* Page Padding for Mobile Safe Area & MiniPlayer Clearance */
+  #main-content, 
+  .MuiContainer-root, 
+  .RaList-content, 
+  .RaShow-main,
+  main {
+    padding-bottom: 125px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
   }
 
-  /* Force progress bar content to STAY VISIBLE on mobile! */
-  .react-jinke-music-player-main .music-player-panel .panel-content .progress-bar-content {
+  /* Album Grid on Mobile: 2 Clean Columns with Rounded Corners & No Tilebar Overlays */
+  .NDAlbumGridView-root {
+    margin: 8px !important;
+    gap: 12px !important;
+  }
+
+  .NDAlbumGridView-tileBarMobile,
+  .NDAlbumGridView-tileBar,
+  .MuiGridListTileBar-root {
+    background: transparent !important;
+    height: auto !important;
+    padding: 6px !important;
+  }
+
+  .NDAlbumGridView-cover,
+  .NDAlbumGridView-coverContainer {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  .NDAlbumGridView-albumName {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #FFFFFF !important;
+    margin-top: 6px !important;
+    line-height: 1.25 !important;
+  }
+
+  .NDAlbumGridView-albumArtistName {
+    font-size: 12px !important;
+    color: #86868B !important;
+    margin-top: 2px !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     1. Persistent Apple Music Floating MiniPlayer Pill (Unexpanded State)
+     -------------------------------------------------------------------------- */
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: calc(100% - 20px) !important;
+    bottom: calc(10px + env(safe-area-inset-bottom, 14px)) !important;
+    height: 58px !important;
+    border-radius: 14px !important;
+    transform: none !important;
+    background: rgba(30, 30, 34, 0.88) !important;
+    backdrop-filter: blur(32px) saturate(210%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0.5px rgba(255, 255, 255, 0.25) !important;
+    padding: 0 12px !important;
+    z-index: 9999 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+    transition: all 0.35s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  }
+
+  /* Specular hairline refraction sheen on top rim of MiniPlayer */
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 8% !important;
+    right: 8% !important;
+    height: 1px !important;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content {
     display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  /* 42px Rounded Square Album Art in MiniPlayer */
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .img-content {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+
+  /* MiniPlayer Track Info */
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .progress-bar-content {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
     flex: 1 1 auto !important;
-    min-width: 100px !important;
-    padding: 0 6px !important;
+    min-width: 0 !important;
+    padding: 0 4px !important;
     overflow: hidden !important;
   }
 
-  .react-jinke-music-player-main .music-player-panel .panel-content .img-content {
-    width: 44px !important;
-    height: 44px !important;
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .audio-title {
+    display: block !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    line-height: 1.25 !important;
   }
 
-  .react-jinke-music-player-main .music-player-panel .panel-content .audio-main,
-  .react-jinke-music-player-main .music-player-panel .panel-content .progress-bar-content section.audio-main {
-    gap: 6px !important;
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .audio-title a {
+    display: block !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
   }
 
-  .react-jinke-music-player-main .music-player-panel .panel-content .play-sounds,
-  .react-jinke-music-player-main .music-player-panel .panel-content .hide-panel,
-  .react-jinke-music-player-main .music-player-panel .panel-content .destroy-btn {
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .songTitle {
+    color: #FFFFFF !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+    display: block !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .songInfo,
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .songArtist {
+    color: #86868B !important;
+    font-size: 0.78rem !important;
+    font-weight: 400 !important;
+    display: block !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .songAlbum {
     display: none !important;
   }
-}
 
-/* Small Mobile Screens (<= 500px) */
-@media (max-width: 500px) {
-  .react-jinke-music-player-main .music-player-panel {
-    width: calc(100% - 12px) !important;
-    left: 6px !important;
-    right: 6px !important;
-    bottom: 8px !important;
-    height: 66px !important;
-    padding: 0 10px !important;
+  /* Micro Hairline Progress Bar along Bottom Edge of MiniPlayer Pill */
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .audio-main,
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .progress-bar-content section.audio-main {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    height: 2.5px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    pointer-events: none !important;
   }
 
-  .react-jinke-music-player-main .music-player-panel .panel-content .img-content {
-    width: 38px !important;
-    height: 38px !important;
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .current-time,
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .duration {
+    display: none !important;
   }
 
-  .react-jinke-music-player-main .play-btn {
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .progress-bar {
+    height: 2.5px !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .rc-slider {
+    height: 2.5px !important;
+    padding: 0 !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .rc-slider-rail {
+    height: 2.5px !important;
+    top: 0 !important;
+    background-color: rgba(255, 255, 255, 0.16) !important;
+    border-radius: 2px !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .rc-slider-track {
+    height: 2.5px !important;
+    top: 0 !important;
+    background: var(--am-accent-gradient) !important;
+    box-shadow: 0 0 6px var(--am-accent-glow) !important;
+    border-radius: 2px !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .rc-slider-handle {
+    display: none !important;
+  }
+
+  /* MiniPlayer Play/Pause and Next Track Buttons */
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .player-content {
+    display: flex !important;
+    align-items: center !important;
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+    gap: 2px !important;
+    padding: 0 !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .prev-audio {
+    display: none !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .play-btn {
     width: 34px !important;
     height: 34px !important;
+    border-radius: 50% !important;
+    background: #FFFFFF !important;
+    color: #000000 !important;
     margin: 0 4px !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4) !important;
   }
 
-  .react-jinke-music-player-main .music-player-panel .panel-content .play-mode-title,
-  .react-jinke-music-player-main .music-player-panel .panel-content .lyric-btn,
-  .react-jinke-music-player-main .music-player-panel .panel-content [data-testid="save-queue-button"] {
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .play-btn svg {
+    font-size: 16px !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .next-audio {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 2px !important;
+    cursor: pointer !important;
+  }
+
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .next-audio svg {
+    font-size: 22px !important;
+    color: rgba(255, 255, 255, 0.88) !important;
+  }
+
+  /* Hide non-essential desktop buttons on mini player */
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .play-sounds,
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .lyric-btn,
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .audio-lists-btn,
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content [data-testid="save-queue-button"],
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .hide-panel,
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .destroy-btn,
+  .react-jinke-music-player-main:not(.am-mobile-expanded) .music-player-panel .panel-content .play-mode-title {
     display: none !important;
   }
 
-  .react-jinke-music-player-main .music-player-panel .panel-content .current-time,
-  .react-jinke-music-player-main .music-player-panel .panel-content .duration {
-    font-size: 0.68rem !important;
-    min-width: 28px !important;
+  /* --------------------------------------------------------------------------
+     2. Full-Screen Apple Music Now Playing Sheet (Expanded State)
+     -------------------------------------------------------------------------- */
+  .react-jinke-music-player-main.am-mobile-expanded {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    z-index: 10000 !important;
+    overflow: hidden !important;
+    animation: amSheetSlideUp 0.38s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+  }
+
+  @keyframes amSheetSlideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0.85;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    background: rgba(14, 14, 18, 0.98) !important;
+    backdrop-filter: blur(60px) saturate(220%) !important;
+    -webkit-backdrop-filter: blur(60px) saturate(220%) !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: calc(48px + env(safe-area-inset-top, 20px)) 24px calc(24px + env(safe-area-inset-bottom, 24px)) 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    z-index: 10001 !important;
+  }
+
+  /* Top Sheet Header: Grabber Bar & Close Button */
+  .am-mobile-sheet-header {
+    position: fixed !important;
+    top: env(safe-area-inset-top, 12px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 10003 !important;
+    cursor: pointer !important;
+  }
+
+  .am-mobile-sheet-grabber {
+    width: 40px !important;
+    height: 5px !important;
+    border-radius: 3px !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+    transition: background-color 0.2s ease, transform 0.2s ease !important;
+  }
+
+  .am-mobile-sheet-header:hover .am-mobile-sheet-grabber,
+  .am-mobile-sheet-header:active .am-mobile-sheet-grabber {
+    background: rgba(255, 255, 255, 0.6) !important;
+    transform: scaleX(1.1) !important;
+  }
+
+  .am-mobile-sheet-close {
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #FFFFFF !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .am-mobile-sheet-close:active {
+    transform: translateY(-50%) scale(0.92) !important;
+    background: rgba(255, 255, 255, 0.22) !important;
+  }
+
+  /* Sheet Panel Content Vertical Distribution */
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 100% !important;
+    width: 100% !important;
+    gap: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Giant Static Apple Music Artwork Card */
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .img-content {
+    width: min(310px, 74vw) !important;
+    height: min(310px, 74vw) !important;
+    border-radius: 20px !important;
+    margin: 8px auto !important;
+    flex-shrink: 0 !important;
+    box-shadow: 
+      0 24px 60px rgba(0, 0, 0, 0.85),
+      0 0 1px rgba(255, 255, 255, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    animation: none !important;
+    transform: none !important;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+
+  /* Sheet Track Info */
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .progress-bar-content {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 0 0 auto !important;
+    padding: 0 !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .audio-title {
+    text-align: left !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+    line-height: 1.3 !important;
+    white-space: normal !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .songTitle {
+    color: #FFFFFF !important;
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    display: block !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .songInfo,
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .songArtist {
+    color: #86868B !important;
+    font-size: 1.05rem !important;
+    font-weight: 500 !important;
+    display: block !important;
+    margin-top: 3px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .songAlbum {
+    color: #6E6E73 !important;
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+    display: inline !important;
+  }
+
+  /* Sheet Scrubber Track */
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .audio-main,
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .progress-bar-content section.audio-main {
+    position: static !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-top: 8px !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .current-time,
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .duration {
+    display: block !important;
+    color: #86868B !important;
+    font-size: 0.78rem !important;
+    font-weight: 500 !important;
+    font-variant-numeric: tabular-nums !important;
+    min-width: 36px !important;
+    text-align: center !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .progress-bar {
+    flex: 1 1 auto !important;
+    height: 14px !important;
+    display: block !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .rc-slider {
+    height: 14px !important;
+    padding: 5px 0 !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .rc-slider-rail {
+    height: 4px !important;
+    top: 5px !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 9999px !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .rc-slider-track {
+    height: 4px !important;
+    top: 5px !important;
+    background: var(--am-accent-gradient) !important;
+    box-shadow: 0 0 12px var(--am-accent-glow) !important;
+    border-radius: 9999px !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .rc-slider-handle {
+    display: block !important;
+    width: 14px !important;
+    height: 14px !important;
+    top: 5px !important;
+    margin-top: -5px !important;
+    margin-left: -7px !important;
+    background: #FFFFFF !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  /* Sheet Big Centered Playback Controls */
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .player-content {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 8px 0 !important;
+    gap: 32px !important;
+    padding: 0 !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .prev-audio,
+  .react-jinke-music-player-main.am-mobile-expanded .next-audio {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .prev-audio svg,
+  .react-jinke-music-player-main.am-mobile-expanded .next-audio svg {
+    font-size: 34px !important;
+    color: #FFFFFF !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .play-btn {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 50% !important;
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .play-btn svg {
+    font-size: 26px !important;
+    color: #000000 !important;
+  }
+
+  /* Sheet Bottom Actions (Queue & Volume) */
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .audio-lists-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    position: absolute !important;
+    bottom: calc(20px + env(safe-area-inset-bottom, 20px)) !important;
+    right: 24px !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .audio-lists-btn svg {
+    font-size: 24px !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .play-sounds {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 280px !important;
+    margin: 4px auto !important;
+    gap: 12px !important;
+  }
+
+  .react-jinke-music-player-main.am-mobile-expanded .music-player-panel .panel-content .sound-operation {
+    width: 100% !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     3. Up Next Queue Popover Sheet on Mobile
+     -------------------------------------------------------------------------- */
+  .audio-lists-panel {
+    position: fixed !important;
+    bottom: calc(72px + env(safe-area-inset-bottom, 12px)) !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: calc(100% - 20px) !important;
+    max-width: 100% !important;
+    max-height: 68vh !important;
+    border-radius: 18px !important;
+    background: rgba(24, 24, 28, 0.96) !important;
+    backdrop-filter: blur(50px) saturate(220%) !important;
+    -webkit-backdrop-filter: blur(50px) saturate(220%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85) !important;
+    z-index: 10005 !important;
   }
 }
 

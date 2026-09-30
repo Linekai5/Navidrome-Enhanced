@@ -53,8 +53,19 @@ const AudioTitle = React.memo(({ audioInfo, gainInfo, isMobile }) => {
       ? `/playlist/${song.playlistId}/show`
       : `/album/${song.albumId}/show`
 
+  const handleTitleClick = (e) => {
+    if (window.innerWidth <= 768) {
+      e.preventDefault()
+    }
+  }
+
   return (
-    <Link to={linkTo} className={className} ref={dragSongRef}>
+    <Link
+      to={linkTo}
+      className={className}
+      ref={dragSongRef}
+      onClick={handleTitleClick}
+    >
       <span>
         <span className={clsx(classes.songTitle, 'songTitle')}>{title}</span>
         {isDesktop && (

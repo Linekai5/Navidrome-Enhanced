@@ -1,13 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import { IconButton } from '@material-ui/core'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useDataProvider } from 'react-admin'
 import { playTracks } from '../actions'
+import { ApplePlayIcon, ApplePauseIcon } from './AppleIcons'
 
-export const PlayButton = ({ record, size, className }) => {
-  let extractSongsData = function (response) {
+export const PlayButton = ({ record, size = 'small', className }) => {
+  const dataProvider = useDataProvider()
+  const dispatch = useDispatch()
+  const playerState = useSelector((state) => state.player)
+
+  const currentSong = playerState?.current?.song
+  const isThisAlbum =
+    Boolean(record?.id) &&
+    Boolean(currentSong) &&
+    (currentSong.albumId === record.id || currentSong.album_id === record.id)
+
+  const isPaused = playerState?.current?.paused === true
+  const isPlaying = isThisAlbum && !isPaused
+
+  const extractSongsData = (response) => {
     const data = response.data.reduce(
       (acc, cur) => ({ ...acc, [cur.id]: cur }),
       {},
@@ -15,9 +28,8 @@ export const PlayButton = ({ record, size, className }) => {
     const ids = response.data.map((r) => r.id)
     return { data, ids }
   }
-  const dataProvider = useDataProvider()
-  const dispatch = useDispatch()
-  const playAlbum = (record) => {
+
+  const playAlbum = () => {
     dataProvider
       .getList('song', {
         pagination: { page: 1, perPage: -1 },
@@ -28,23 +40,45 @@ export const PlayButton = ({ record, size, className }) => {
         },
       })
       .then((response) => {
-        let { data, ids } = extractSongsData(response)
+        const { data, ids } = extractSongsData(response)
         dispatch(playTracks(data, ids))
       })
   }
 
+  const handleClick = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+
+    if (isThisAlbum) {
+      if (typeof window !== 'undefined' && window.navidromeAudioInstance?.togglePlay) {
+        window.navidromeAudioInstance.togglePlay()
+      } else {
+        const playBtn = document.querySelector('.react-jinke-music-player-main .play-btn')
+        if (playBtn) {
+          playBtn.click()
+        } else {
+          playAlbum()
+        }
+      }
+    } else {
+      playAlbum()
+    }
+  }
+
+  const iconSize = size === 'small' ? 20 : 26
+
   return (
     <IconButton
-      onClick={(e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        playAlbum(record)
-      }}
-      aria-label="play"
+      onClick={handleClick}
+      aria-label={isPlaying ? 'pause' : 'play'}
       className={className}
       size={size}
     >
-      <PlayArrowIcon fontSize={size} />
+      {isPlaying ? (
+        <ApplePauseIcon size={iconSize} />
+      ) : (
+        <ApplePlayIcon size={iconSize} />
+      )}
     </IconButton>
   )
 }
@@ -55,6 +89,4 @@ PlayButton.propTypes = {
   className: PropTypes.string,
 }
 
-PlayButton.defaultProps = {
-  size: 'small',
-}
+export default PlayButton

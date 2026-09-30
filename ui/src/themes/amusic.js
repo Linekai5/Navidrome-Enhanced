@@ -169,7 +169,6 @@ export default {
         backdropFilter: 'blur(30px) saturate(180%)',
         WebkitBackdropFilter: 'blur(30px) saturate(180%)',
         borderRight: '1px solid rgba(255, 255, 255, 0.06)',
-        width: '240px',
       },
     },
     // Sidebar Navigation Links

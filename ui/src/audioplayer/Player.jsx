@@ -34,6 +34,7 @@ import { keyMap } from '../hotkeys'
 import keyHandlers from './keyHandlers'
 import { calculateGain } from '../utils/calculateReplayGain'
 import { detectBrowserProfile, decisionService } from '../transcode'
+import { ApplePlayIcon, ApplePauseIcon } from '../common'
 
 const Player = () => {
   const theme = useCurrentTheme()
@@ -235,6 +236,10 @@ const Player = () => {
       ),
       locale: locale(translate),
       sortableOptions: { delay: 200, delayOnTouchOnly: true },
+      icon: {
+        play: <ApplePlayIcon size={18} />,
+        pause: <ApplePauseIcon size={18} />,
+      },
     }),
     [gainInfo, isDesktop, playerTheme, translate, playerState.mode],
   )
@@ -469,7 +474,12 @@ const Player = () => {
         onCoverClick={onCoverClick}
         onAudioError={onAudioError}
         onBeforeDestroy={onBeforeDestroy}
-        getAudioInstance={setAudioInstance}
+        getAudioInstance={(instance) => {
+          setAudioInstance(instance)
+          if (typeof window !== 'undefined') {
+            window.navidromeAudioInstance = instance
+          }
+        }}
       />
       <GlobalHotKeys handlers={handlers} keyMap={keyMap} allowChanges />
     </ThemeProvider>
